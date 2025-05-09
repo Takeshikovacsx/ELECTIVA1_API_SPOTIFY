@@ -3,6 +3,10 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import SpotifyWebApi from 'spotify-web-api-js';
 
+const spotifyApi = new SpotifyWebApi();
+
+
+
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -10,7 +14,6 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-const spotifyApi = new SpotifyWebApi();
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -19,6 +22,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
@@ -40,16 +44,16 @@ export function AuthProvider({ children }) {
     }, [token]);
 
     return (
-        <AuthContext.Provider value={{
-            user,
-            token,
-            setToken,
-            spotifyApi,
-            loginWithGoogle,
-            logout
-        }}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={{ 
+      user, 
+      token,
+      setToken,
+      spotifyApi,
+      loginWithGoogle, 
+      logout 
+    }}>
+      {children}
+    </AuthContext.Provider>
     );
 }
 

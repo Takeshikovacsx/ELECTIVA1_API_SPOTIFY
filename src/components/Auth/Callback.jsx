@@ -10,19 +10,25 @@ export default function Callback() {
 
   useEffect(() => {
     const code = new URLSearchParams(search).get('code');
-    if (!code) return navigate('/login');
+    if (!code) {
+      return navigate('/login', { replace: true });
+    }
 
     (async () => {
       try {
         const { access_token } = await exchangeCodeForToken(code);
         setToken(access_token);
-        navigate('/profile');
-      } catch (error) {
-        console.error('Error:', error);
-        navigate('/login');
+        navigate('/profile', { replace: true });
+      } catch (err) {
+        console.error('Error exchanging code for token:', err);
+        navigate('/login', { replace: true });
       }
     })();
   }, [search]);
 
-  return <div className="min-h-screen flex items-center justify-center">Procesando...</div>;
+  return (
+    <div className="flex items-center justify-center min-h-screen text-white">
+      Autorizando Spotify...
+    </div>
+  );
 }
